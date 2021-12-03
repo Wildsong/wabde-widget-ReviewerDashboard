@@ -22,6 +22,7 @@ define([
     "dojo/_base/html",
     "dijit/_WidgetsInTemplateMixin",
     "jimu/BaseWidget",
+    "jimu/utils",
     "esri/tasks/datareviewer/DashboardTask",
     "esri/tasks/datareviewer/ReviewerFilters",
     "./ReviewerMapHelper",
@@ -51,7 +52,7 @@ define([
     "dijit/form/RadioButton",
     "dijit/form/Select"
   ],
-  function(declare, on, query, lang, array, html, _WidgetsInTemplateMixin, BaseWidget,
+  function(declare, on, query, lang, array, html, _WidgetsInTemplateMixin, BaseWidget, jimuUtils,
   DashboardTask, ReviewerFilters, ReviewerMapHelper, ReviewerResultsTask, DashboardResult,
   ReviewerLifecycle, TabContainer, Graphic, ArcGISDynamicMapServiceLayer, GeometryService,
   SimpleFillSymbol, Query, QueryTask, Extent, FeatureLayer, Polygon, Draw,
@@ -268,7 +269,7 @@ return declare([BaseWidget, _WidgetsInTemplateMixin], {
         }
         strHtmlScript += "data-dojo-type='dijit/form/RadioButton' id='" + radioArray[i].fieldName +
         "Radio' class='radioButtonLabel' innerText='" + radioArray[i].alias + "'/>";
-        strHtmlScript += radioArray[i].alias + "</label></a></li>";
+        strHtmlScript += jimuUtils.sanitizeHTML(radioArray[i].alias) + "</label></a></li>";
         var domLi = html.toDom(strHtmlScript);
         html.place(domLi, this.filterList);
         on(dom.byId(radioArray[i].fieldName + "Radio"),
@@ -675,8 +676,8 @@ return declare([BaseWidget, _WidgetsInTemplateMixin], {
         this.currentChartIndex = index;
         html.setStyle(chartDiv, {display:'block'});
       }
-      this.chartTitle.innerHTML = this.nls.resultsBy + this.selectedFieldAlias;
-      this.chartTitle.title = this.nls.resultsBy + this.selectedFieldAlias;
+      this.chartTitle.innerHTML = this.nls.resultsBy + jimuUtils.sanitizeHTML(this.selectedFieldAlias);
+      this.chartTitle.title = this.nls.resultsBy + jimuUtils.sanitizeHTML(this.selectedFieldAlias);
       var li = lis[index];
       if(li){
         html.addClass(li, 'selected');
